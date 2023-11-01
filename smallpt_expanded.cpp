@@ -113,7 +113,6 @@ public:
         topp = Vec(position.x, position.y + h / 2, position.z);
         botp = Vec(position.x, position.y - h / 2, position.z);
     }
-    // /*
     virtual double intersect(const Ray &r) const
     {
         // 圆柱体没有球体那么好的性质，求交点需要分为两步，第一步是判断是否和侧面相交，第二步判断是否和两个底面相交
@@ -162,71 +161,6 @@ public:
         }
         return 0;
     }
-    // */
-
-    /*
-    virtual double intersect(const Ray &r) const
-    {
-        // 圆柱体没有球体那么好的性质，求交点需要分为两步，第一步是判断是否和侧面相交，第二步判断是否和两个底面相交
-        // 侧面相交考虑联立射线方程和圆柱侧面方程（无限高度），求解出交点后判断交点是否位于两个底面坐标范围之内
-        // 底面考虑和圆的方程联立（x^2+z^2=r^2）
-        double m = r.o.x - position.x;
-        double n = r.o.z - position.z;
-        double A = r.d.x * r.d.x + r.d.z * r.d.z;
-        double B = 2 * m * r.d.x + 2 * n * r.d.z;
-        double C = m * m + n * n - radius * radius;
-        double det = B * B - 4 * A * C;
-
-        double t=0,tp;
-        if (det >= 0 && A > eps) // 侧面
-        {
-            det = sqrt(det);
-            tp = (-B - det) / (2 * A);
-            if(tp>eps) t = tp;
-
-            tp = (-B + det) / (2 * A);
-            if(tp>eps){
-                if(t==0) t=tp;
-                else if(tp<t) t=tp;
-            }
-        }
-        // 上底面相交判断
-        if (r.d.y > eps)
-        {
-            tp = (topp.y - r.o.y) / r.d.y;
-            double xt = r.o.x + tp * r.d.x;
-            double zt = r.o.z + tp * r.d.z;
-            if (tp > eps)
-                if ((xt - topp.x) * (xt - topp.x) + (zt - topp.z) * (zt - topp.z) <= radius * radius)
-                    if(t==0) t=tp;
-                    else if(tp<t) t=tp;
-        }
-        // 下底面判断
-        if (r.d.y > eps)
-        {
-            tp = (botp.y - r.o.y) / r.d.y;
-            double xt = r.o.x + tp * r.d.x;
-            double zt = r.o.z + tp * r.d.z;
-            if (tp > eps)
-                if ((xt - botp.x) * (xt - botp.x) + (zt - botp.z) * (zt - botp.z) <= radius * radius)
-                    if(t==0) t=tp;
-                    else if(tp<t) t=tp;
-        }
-        return t;
-    }
-    */
-
-    // virtual Vec compN(const Vec &pos) const
-    // {
-    //     if (fabs(pos.y - topp.y) <= eps)
-    //         return Vec(0, 1, 0);
-    //     else if (fabs(pos.y - botp.y) <= eps)
-    //         return Vec(0, -1, 0);
-    //     else
-    //     {
-    //         return (pos - Vec(position.x, pos.y, position.z)).norm();
-    //     }
-    // }
     virtual Vec compN(const Vec &pos) const
     {
         if (fabs(pos.y - topp.y) <= eps)
